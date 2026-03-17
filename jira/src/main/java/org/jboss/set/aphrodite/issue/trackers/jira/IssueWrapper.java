@@ -128,8 +128,8 @@ class IssueWrapper {
         setIssueProject(issue, jiraIssue);
         setIssueComponent(issue, jiraIssue);
 
-        setIssueUser((i, u) -> i.setAssignee(new User(u.getEmailAddress(), u.getName())), issue, jiraIssue.getAssignee());
-        setIssueUser((i, u) -> i.setReporter(new User(u.getEmailAddress(), u.getName())), issue, jiraIssue.getReporter());
+        setIssueUser((i, u) -> i.setAssignee(createUserFromJiraUser(u)), issue, jiraIssue.getAssignee());
+        setIssueUser((i, u) -> i.setReporter(createUserFromJiraUser(u)), issue, jiraIssue.getReporter());
 
         setIssueStage(issue, jiraIssue);
         String type = jiraIssue.getIssueType().getName();
@@ -262,9 +262,20 @@ class IssueWrapper {
         );
         issue.getDescription().ifPresent(inputBuilder::setDescription);
 
-        issue.getAssignee().ifPresent(assignee -> inputBuilder.setFieldInput(
-                new FieldInput(IssueFieldId.ASSIGNEE_FIELD, ComplexIssueInputFieldValue.with("name",
-                        assignee.getName().orElseThrow(this::nullUsername)))));
+        issue.getAssignee().ifPresent(assignee -> {
+            // JIRA Cloud uses accountId, JIRA Server uses name. Try accountId first (Cloud), fallback to name (Server)
+            if (assignee.getAccountId().isPresent()) {
+                inputBuilder.setFieldInput(
+                    new FieldInput(IssueFieldId.ASSIGNEE_FIELD,
+                        ComplexIssueInputFieldValue.with("accountId", assignee.getAccountId().get())));
+            } else if (assignee.getName().isPresent()) {
+                inputBuilder.setFieldInput(
+                    new FieldInput(IssueFieldId.ASSIGNEE_FIELD,
+                        ComplexIssueInputFieldValue.with("name", assignee.getName().get())));
+            } else {
+                throw nullUsername();
+            }
+        });
 
         // this is ok but does nothing if there is no permissions.
         issue.getStage().getStateMap().entrySet()
@@ -361,13 +372,39 @@ class IssueWrapper {
         issue.setComponents(tmp);
     }
 
+    /**
+     * Create Aphrodite User from JIRA REST client User object.
+     * Handles both JIRA Server (uses getName()) and JIRA Cloud (uses getAccountId()).
+     */
+    private User createUserFromJiraUser(com.atlassian.jira.rest.client.api.domain.User jiraUser) {
+        String email = jiraUser.getEmailAddress();
+        String name = jiraUser.getName();
+        String accountId = null;
+        try {
+            // AccountId is part of the self URI in Cloud: /rest/api/2/user?accountId=xxx
+            String self = jiraUser.getSelf() != null ? jiraUser.getSelf().toString() : null;
+            if (self != null && self.contains("accountId=")) {
+                accountId = self.substring(self.indexOf("accountId=") + "accountId=".length());
+                // Remove any trailing query parameters
+                if (accountId.contains("&")) {
+                    accountId = accountId.substring(0, accountId.indexOf("&"));
+                }
+            }
+        } catch (Exception e) {
+            // If accountId extraction fails, fall back to name
+        }
+        return new User(email, name, accountId);
+    }
+
     private IllegalArgumentException nullUsername() {
         throw new IllegalArgumentException("JIRA issues require a non-null username in order to set an assignee/reporter");
     }
 
     private void setIssueUser(BiConsumer<Issue, com.atlassian.jira.rest.client.api.domain.User> function, Issue issue,
                               com.atlassian.jira.rest.client.api.domain.User user) {
-        if (user != null && user.getName() != null && user.getEmailAddress() != null)
+        // Accept user if it has email and either name (Server) or accountId (Cloud)
+        if (user != null && user.getEmailAddress() != null &&
+            (user.getName() != null || user.getSelf() != null))
             function.accept(issue, user);
     }
 

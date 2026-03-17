@@ -42,8 +42,9 @@ class JiraQueryBuilder {
     String getSearchJQL(SearchCriteria criteria) {
         StringBuilder sb = new StringBuilder();
         criteria.getStatus().ifPresent(status -> addCriteriaToJQL("status = ", getJiraStatus(status), " AND ", sb));
-        criteria.getAssignee().ifPresent(assignee -> addCriteriaToJQL("assignee = ", assignee, " AND ", sb));
-        criteria.getReporter().ifPresent(reporter -> addCriteriaToJQL("reporter = ", reporter, " AND ", sb));
+        // JIRA Cloud requires email addresses in quotes for user fields ("rchakrab@redhat.com")
+        criteria.getAssignee().ifPresent(assignee -> addUserCriteriaToJQL("assignee", assignee, " AND ", sb));
+        criteria.getReporter().ifPresent(reporter -> addUserCriteriaToJQL("reporter", reporter, " AND ", sb));
         criteria.getComponent().ifPresent(component -> addCriteriaToJQL("component = ", component, " AND ", sb));
         criteria.getProduct().ifPresent(product -> addCriteriaToJQL("project = ", product, " AND ", sb));
         criteria.getStartDate().ifPresent(date -> {
@@ -106,5 +107,32 @@ class JiraQueryBuilder {
         sb.append("'");
         sb.append(value);
         sb.append("'");
+    }
+
+    /**
+     * JQL that queries by username will return 0 results on Jira Cloud.
+     * It must be adapted to query by account ID or quoted strings of account emails.
+     * Details: https://docs.google.com/document/d/1tpf_XJB1MiqkwFSKI02fa_KWkXFsarN6zVfj1-jl2g8/edit?usp=sharing
+     */
+    private void addUserCriteriaToJQL(String field, String value, String connector, StringBuilder sb) {
+        if (field == null || value == null)
+            return;
+
+        if (connector != null && sb.length() != 0)
+            sb.append(connector);
+
+        sb.append(field);
+        sb.append(" in (");
+
+        if (value.contains("@")) {
+            // Email format: needs quotes
+            sb.append("\"");
+            sb.append(value);
+            sb.append("\"");
+        } else {
+            // AccountId format: no quotes
+            sb.append(value);
+        }
+        sb.append(")");
     }
 }

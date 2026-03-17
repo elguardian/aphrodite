@@ -8,21 +8,31 @@ import java.util.Optional;
 public class User {
     private final String email;
     private final String name;
+    private final String accountId;
 
 
     public static User createWithEmail(String email) {
-        return new User(email, null);
+        return new User(email, null, null);
     }
 
     public static User createWithUsername(String name) {
-        return new User(null, name);
+        return new User(null, name, null);
+    }
+
+    public static User createWithAccountId(String accountId) {
+        return new User(null, null, accountId);
     }
 
     public User(String email, String name) {
-        if (email == null && name == null)
-            throw new NullPointerException("A valid User object requires that one of the 'email' or 'name' fields are non-null.");
+        this(email, name, null);
+    }
+
+    public User(String email, String name, String accountId) {
+        if (email == null && name == null && accountId == null)
+            throw new NullPointerException("A valid User object requires that one of the 'email', 'name' or 'accountId' fields are non-null.");
         this.email = email;
         this.name = name;
+        this.accountId = accountId;
     }
 
     public Optional<String> getEmail() {
@@ -33,6 +43,10 @@ public class User {
         return Optional.ofNullable(name);
     }
 
+    public Optional<String> getAccountId() {
+        return Optional.ofNullable(accountId);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -41,7 +55,8 @@ public class User {
         User user = (User) o;
 
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
-        return name != null ? name.equals(user.name) : user.name == null;
+        if (name != null ? !name.equals(user.name) : user.name != null) return false;
+        return accountId != null ? accountId.equals(user.accountId) : user.accountId == null;
 
     }
 
@@ -49,6 +64,7 @@ public class User {
     public int hashCode() {
         int result = email != null ? email.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (accountId != null ? accountId.hashCode() : 0);
         return result;
     }
 
@@ -57,6 +73,7 @@ public class User {
         return "User{" +
                 "email='" + email + '\'' +
                 ", name='" + name + '\'' +
+                ", accountId='" + accountId + '\'' +
                 '}';
     }
 }
