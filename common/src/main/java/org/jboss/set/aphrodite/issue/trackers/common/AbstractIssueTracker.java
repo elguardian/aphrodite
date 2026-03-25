@@ -22,17 +22,6 @@
 
 package org.jboss.set.aphrodite.issue.trackers.common;
 
-import org.apache.commons.logging.Log;
-import org.jboss.set.aphrodite.common.Utils;
-import org.jboss.set.aphrodite.config.AphroditeConfig;
-import org.jboss.set.aphrodite.config.IssueTrackerConfig;
-import org.jboss.set.aphrodite.config.TrackerType;
-import org.jboss.set.aphrodite.domain.Comment;
-import org.jboss.set.aphrodite.domain.Issue;
-import org.jboss.set.aphrodite.domain.PullRequest;
-import org.jboss.set.aphrodite.spi.IssueTrackerService;
-import org.jboss.set.aphrodite.spi.NotFoundException;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -45,6 +34,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import org.jboss.set.aphrodite.common.Utils;
+import org.jboss.set.aphrodite.config.AphroditeConfig;
+import org.jboss.set.aphrodite.config.IssueTrackerConfig;
+import org.jboss.set.aphrodite.config.TrackerType;
+import org.jboss.set.aphrodite.domain.Comment;
+import org.jboss.set.aphrodite.domain.Issue;
+import org.jboss.set.aphrodite.domain.PullRequest;
+import org.jboss.set.aphrodite.spi.IssueTrackerService;
+import org.jboss.set.aphrodite.spi.NotFoundException;
+import org.slf4j.Logger;
 
 /**
  * An abstract IssueTracker which provides logic common to all issue trackers.
@@ -60,7 +60,7 @@ public abstract class AbstractIssueTracker implements IssueTrackerService {
     protected IssueTrackerConfig config;
     protected URL baseUrl;
 
-    protected abstract Log getLog();
+    protected abstract Logger getLog();
 
     public AbstractIssueTracker(TrackerType TRACKER_TYPE) {
         this.TRACKER_TYPE = TRACKER_TYPE;
@@ -111,7 +111,7 @@ public abstract class AbstractIssueTracker implements IssueTrackerService {
                     issues.add(getIssue(url));
             } catch (MalformedURLException e) {
                 if (getLog().isTraceEnabled())
-                    getLog().trace(e);
+                    getLog().trace("getIssuesAssociatedWith failure", e);
             } catch (NotFoundException e) {
                 Utils.logException(getLog(), "Unable to retrieve Issue at " + link + ":", e);
             }

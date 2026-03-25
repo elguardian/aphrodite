@@ -22,16 +22,16 @@
 
 package org.jboss.set.aphrodite.repository.services.common;
 
-import org.apache.commons.logging.Log;
-import org.jboss.set.aphrodite.common.Utils;
-import org.jboss.set.aphrodite.config.AphroditeConfig;
-import org.jboss.set.aphrodite.config.RepositoryConfig;
-import org.jboss.set.aphrodite.spi.NotFoundException;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Objects;
+
+import org.jboss.set.aphrodite.common.Utils;
+import org.jboss.set.aphrodite.config.AphroditeConfig;
+import org.jboss.set.aphrodite.config.RepositoryConfig;
+import org.jboss.set.aphrodite.spi.NotFoundException;
+import org.slf4j.Logger;
 
 /**
  * @author Ryan Emerson
@@ -42,7 +42,7 @@ public abstract class AbstractRepositoryService {
     protected RepositoryConfig config;
     protected URL baseUrl;
 
-    protected abstract Log getLog();
+    protected abstract Logger getLog();
 
     public AbstractRepositoryService(RepositoryType repositoryType) {
         this.repositoryType = repositoryType;

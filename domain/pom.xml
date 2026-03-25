@@ -8,12 +8,17 @@
         <version>0.7.21.Final-SNAPSHOT</version>
     </parent>
 
-	<artifactId>jboss-aphrodite-domain</artifactId>
+    <artifactId>jboss-aphrodite-domain</artifactId>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.jboss.set</groupId>
-			<artifactId>jboss-aphrodite-container</artifactId>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.set</groupId>
+            <artifactId>jboss-aphrodite-container</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

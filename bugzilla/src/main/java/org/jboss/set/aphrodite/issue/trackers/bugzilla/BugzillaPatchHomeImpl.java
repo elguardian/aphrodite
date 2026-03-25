@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jboss.set.aphrodite.Aphrodite;
 import org.jboss.set.aphrodite.common.Utils;
 import org.jboss.set.aphrodite.domain.Issue;
@@ -41,9 +39,11 @@ import org.jboss.set.aphrodite.domain.spi.PatchHome;
 import org.jboss.set.aphrodite.repository.services.common.RepositoryUtils;
 import org.jboss.set.aphrodite.spi.AphroditeException;
 import org.jboss.set.aphrodite.spi.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BugzillaPatchHomeImpl implements PatchHome {
-    private static final Log logger = LogFactory.getLog(BugzillaPatchHomeImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(BugzillaPatchHomeImpl.class);
 
     @Override
     public Stream<Patch> findPatchesByIssue(Issue issue) {
