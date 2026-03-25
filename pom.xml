@@ -117,13 +117,14 @@
                 <version>${org.slf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.enterprise</groupId>
-                <artifactId>cdi-api</artifactId>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.cdi-api</artifactId>
                 <version>${version.javax.enterprise.cdi-api}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.jboss.weld.se</groupId>
-                <artifactId>weld-se</artifactId>
+                <artifactId>weld-se-shaded</artifactId>
                 <version>${version.org.jboss.weld.se}</version>
             </dependency>
             <!-- project dependencies-->
@@ -344,8 +345,8 @@
                 </property>
             </activation>
             <properties>
-                <version.javax.enterprise.cdi-api>1.2</version.javax.enterprise.cdi-api>
-                <version.org.jboss.weld.se>2.3.3.Final</version.org.jboss.weld.se>
+                <version.javax.enterprise.cdi-api>4.1.0</version.javax.enterprise.cdi-api>
+                <version.org.jboss.weld.se>6.0.4.Final</version.org.jboss.weld.se>
             </properties>
         </profile>
         <profile>

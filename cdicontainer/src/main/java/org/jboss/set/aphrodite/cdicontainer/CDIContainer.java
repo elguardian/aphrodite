@@ -21,14 +21,16 @@
  */
 package org.jboss.set.aphrodite.cdicontainer;
 
+import java.util.Set;
+
+import javax.naming.NameNotFoundException;
+
 import org.jboss.set.aphrodite.container.Container;
 
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.CDI;
-import javax.naming.NameNotFoundException;
-import java.util.Set;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.CDI;
 
 public class CDIContainer extends Container {
     @Override

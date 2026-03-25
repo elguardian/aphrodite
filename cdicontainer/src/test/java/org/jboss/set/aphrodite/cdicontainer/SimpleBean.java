@@ -21,8 +21,8 @@
  */
 package org.jboss.set.aphrodite.cdicontainer;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 
 @ApplicationScoped @Named("SimpleBean")
 public class SimpleBean {
