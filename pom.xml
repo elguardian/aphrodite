@@ -340,7 +340,7 @@
             <id>community</id>
             <activation>
                 <property>
-                    <name>community</name>
+                    <name>!production</name>
                 </property>
             </activation>
             <properties>
@@ -352,7 +352,7 @@
             <id>redhat</id>
             <activation>
                 <property>
-                    <name>!community</name>
+                    <name>community</name>
                 </property>
             </activation>
             <repositories>
