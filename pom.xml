@@ -129,10 +129,10 @@
 
     <developers>
         <developer>
-            <id>egongzle</id>
+            <id>elguardian</id>
             <name>Enrique González Martínez</name>
-            <organization>Red Hat</organization>
-            <email>egonzale@redhat.com</email>
+            <organization>IBM</organization>
+            <email>enrique.gonzalez.martinez1@ibm.com</email>
             <timezone>Spain</timezone>
         </developer>
         <developer>
