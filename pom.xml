@@ -157,6 +157,20 @@
 
     <build>
         <plugins>
+            <!-- we don't deploy in sonatype/jboss-->
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nxrm3-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>nexus-deploy</id>
+                        <phase>none</phase> 
+                        <goals>
+                            <goal>staging-deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -164,20 +178,7 @@
         </plugins>
         <pluginManagement>
             <plugins>
-                <!-- we don't deploy in sonatype/jboss-->
-                <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nxrm3-maven-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>nexus-deploy</id>
-                            <phase>none</phase> 
-                            <goals>
-                                <goal>staging-deploy</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
