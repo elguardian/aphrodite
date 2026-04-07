@@ -213,8 +213,18 @@ class IssueWrapper {
     }
 
     private JiraChangelogGroup createJiraChangelogGroup(ChangelogGroup changelogGroup) {
+<<<<<<< Updated upstream
         final String noAuthor = "";
         String author = (changelogGroup.getAuthor() != null) ? changelogGroup.getAuthor().getName() : noAuthor;
+=======
+        String author = "";
+        BasicUser user = changelogGroup.getAuthor();
+        if (user != null && user.getName() != null) {
+            author = user.getName();
+        } else if (user != null && user.getAccountId() != null) {
+            author = user.getAccountId();
+        }
+>>>>>>> Stashed changes
         Date dateCreated = (changelogGroup.getCreated() != null) ? changelogGroup.getCreated().toDate() : new Date();
         List<JiraChangelogItem> changelogItems = createJiraChangelogItems(changelogGroup.getItems());
         return new JiraChangelogGroup(User.createWithUsername(author), dateCreated, changelogItems);
